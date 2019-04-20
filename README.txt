@@ -10,7 +10,7 @@ So, this class has 4 main method :
 - get() allow to get back values stored
 
 
-All values are stored in this format :
+All values are uint16_t and stored in this format :
 - YEAR    : number of year counted
 - DAY     :  -        days  -
 - HOUR    :  -        hours
@@ -18,3 +18,5 @@ All values are stored in this format :
 - SECONDE :  -        secondes
 - MILLI   :  -        millisecondes
 - MICRO   :  -        microsecondes
+
+So this library allow counting from 1 microseconde to 65535y 364d 24h 59min 59s 999ms 999us
