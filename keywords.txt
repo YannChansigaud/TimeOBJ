@@ -11,10 +11,12 @@ TimeOBJ     KEYWORD1
 ###########################################
 # Methods and Functions (KEYWORD2)
 ###########################################
-reset       KEYWORD2
+zero        KEYWORD2
 add         KEYWORD2
 sub         KEYWORD2
 get         KEYWORD2
+compare     KEYWORD2
+print       KEYWORD2
 
 ###########################################
 # Constants (LITERAL1)
