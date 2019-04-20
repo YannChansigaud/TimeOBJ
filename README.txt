@@ -8,6 +8,7 @@ So, this class has 4 main method :
 - sub() allow you to substract value with the unity of the value
 - zero() put all values stored to zéro
 - get() allow to get back values stored
+- compare() allow you to compare two time
 
 
 All values are uint16_t and stored in this layout :
@@ -20,3 +21,5 @@ All values are uint16_t and stored in this layout :
 - MICRO   :  -        microsecondes
 
 So this library allow counting from 1 microseconde to 65535y 364d 24h 59min 59s 999ms 999us
+
+warning : it is NOT a RTC library, there is no kind of date, just unit of time
