@@ -1,0 +1,28 @@
+###########################################
+# Syntax Coloring Map For TimeOBJ
+###########################################
+
+###########################################
+# Datatypes (KEYWORD1)
+###########################################
+
+TimeOBJ     KEYWORD1
+
+###########################################
+# Methods and Functions (KEYWORD2)
+###########################################
+reset       KEYWORD2
+add         KEYWORD2
+sub         KEYWORD2
+get         KEYWORD2
+
+###########################################
+# Constants (LITERAL1)
+###########################################
+YEAR        LITERAL1
+DAY         LITERAL1
+HOUR        LITERAL1
+MINUTE      LITERAL1
+SECONDE     LITERAL1
+MILLI       LITERAL1
+MICRO       LITERAL1
