@@ -10,9 +10,9 @@ So, this class has 4 main method :
 - get() allow to get back values stored
 
 
-All values are uint16_t and stored in this format :
+All values are uint16_t and stored in this layout :
 - YEAR    : number of year counted
-- DAY     :  -        days  -
+- DAY     :  -        days
 - HOUR    :  -        hours
 - MINUTE  :  -        minutes
 - SECONDE :  -        secondes
