@@ -34,29 +34,52 @@ void TimeOBJ::sub( unsigned long T, byte type ){
 void TimeOBJ::split(){
 	if( typeToSplit < MILLI ){    timeToSplit &= 0xFFFF;    }
 	
-	byte debut = 0;
-	byte fin = 0;
+	byte first = 0;
+	byte last = 0;
 	diviseur = 1;
 
 	switch( typeToSplit ){
-		case YEAR    :{    debut = YEAR;  fin = YEAR;      break;   }
-		case DAY     :{    debut = YEAR;  fin = DAY;       break;   }
-		case HOUR    :{    debut = YEAR;  fin = HOUR;      break;   }
-		case MINUTE  :{    debut = DAY;   fin = MINUTE;    break;   }
-		case SECONDE :{    debut = HOUR;  fin = SECONDE;   break;   }
-		case MILLI   :{    debut = DAY;   fin = MILLI;     break;   }
-		case MICRO   :{    debut = HOUR;  fin = MICRO;     break;   }
+		case YEAR    :{    first = YEAR;  last = YEAR;      break;   }
+		case DAY     :{    first = YEAR;  last = DAY;       break;   }
+		case HOUR    :{    first = YEAR;  last = HOUR;      break;   }
+		case MINUTE  :{    first = DAY;   last = MINUTE;    break;   }
+		case SECONDE :{    first = HOUR;  last = SECONDE;   break;   }
+		case MILLI   :{    first = DAY;   last = MILLI;     break;   }
+		case MICRO   :{    first = HOUR;  last = MICRO;     break;   }
 	}
-	div_calculator( debut, fin );
-	switch( debut ){
-		case YEAR    :{  div_eucli( YEAR    );  if( fin == YEAR    ){    break;	}  }
-		case DAY     :{  div_eucli( DAY     );  if( fin == DAY     ){    break;	}  }
-		case HOUR    :{  div_eucli( HOUR    );  if( fin == HOUR    ){    break;	}  }
-		case MINUTE  :{  div_eucli( MINUTE  );  if( fin == MINUTE  ){    break;	}  }
-		case SECONDE :{  div_eucli( SECONDE );  if( fin == SECONDE ){    break;	}  }
-		case MILLI   :{  div_eucli( MILLI   );  if( fin == MILLI   ){    break;	}  }
-		case MICRO   :{  div_eucli( MICRO   );  if( fin == MICRO   ){    break;	}  }
+	div_calculator( first, last );
+	switch( first ){
+		case YEAR    :{  div_eucli( YEAR    );  if( last == YEAR    ){    break;	}  }
+		case DAY     :{  div_eucli( DAY     );  if( last == DAY     ){    break;	}  }
+		case HOUR    :{  div_eucli( HOUR    );  if( last == HOUR    ){    break;	}  }
+		case MINUTE  :{  div_eucli( MINUTE  );  if( last == MINUTE  ){    break;	}  }
+		case SECONDE :{  div_eucli( SECONDE );  if( last == SECONDE ){    break;	}  }
+		case MILLI   :{  div_eucli( MILLI   );  if( last == MILLI   ){    break;	}  }
+		case MICRO   :{  div_eucli( MICRO   );  if( last == MICRO   ){    break;	}  }
 	}
+}
+
+bool TimeOBJ::compare( uint16_t Y, uint16_t D, uint16_t H, uint16_t M, uint16_t S, uint16_t MS, uint16_t US ){
+	splitTab[ YEAR    ] = Y;
+	splitTab[ DAY     ] = D;
+	splitTab[ HOUR    ] = H;
+	splitTab[ MINUTE  ] = M;
+	splitTab[ SECONDE ] = S;
+	splitTab[ MILLI   ] = MS;
+	splitTab[ MICRO   ] = US;
+	return( compare() );
+}
+bool TimeOBJ::compare( uint32_t T, byte type ){
+    typeToSplit = type;
+	timeToSplit = T;
+	split();
+	return( compare() );
+}
+bool TimeOBJ::compare(){
+    for( byte i=0 ; i<7 ; i++ ){
+		if( splitTab[i] > TimeTab[i] ){  return( true );  }
+	}
+	return( false );
 }
 void TimeOBJ::print(){
 	Serial.print( "TimeTab  : " );
@@ -123,15 +146,15 @@ void TimeOBJ::div_eucli( byte type ){                                           
 	diviseur    /= maxiTab[type+1];                                                      // divisor updated corresponding to the next division
 }                                                                                        // 
 
-void TimeOBJ::div_calculator( byte debut, byte fin ){
+void TimeOBJ::div_calculator( byte first, byte last ){
 	diviseur = 1;
-	switch( debut ){
-		case YEAR     :{  diviseur *= maxiTab[DAY];      if( fin == DAY       ){    break;    }  }
-		case DAY      :{  diviseur *= maxiTab[HOUR];     if( fin == HOUR      ){    break;    }  }
-		case HOUR     :{  diviseur *= maxiTab[MINUTE];   if( fin == MINUTE    ){    break;    }  }
-		case MINUTE   :{  diviseur *= maxiTab[SECONDE];  if( fin == SECONDE   ){    break;    }  }
-		case SECONDE  :{  diviseur *= maxiTab[MILLI];    if( fin == MILLI     ){    break;    }  }
-		case MILLI    :{  diviseur *= maxiTab[MICRO];    if( fin == MICRO     ){    break;    }  }
-		case MICRO    :{  diviseur *= 1;                 if( fin == MICRO     ){    break;    }  }
+	switch( first ){
+		case YEAR     :{  diviseur *= maxiTab[DAY];      if( last == DAY       ){    break;    }  }
+		case DAY      :{  diviseur *= maxiTab[HOUR];     if( last == HOUR      ){    break;    }  }
+		case HOUR     :{  diviseur *= maxiTab[MINUTE];   if( last == MINUTE    ){    break;    }  }
+		case MINUTE   :{  diviseur *= maxiTab[SECONDE];  if( last == SECONDE   ){    break;    }  }
+		case SECONDE  :{  diviseur *= maxiTab[MILLI];    if( last == MILLI     ){    break;    }  }
+		case MILLI    :{  diviseur *= maxiTab[MICRO];    if( last == MICRO     ){    break;    }  }
+		case MICRO    :{  diviseur *= 1;                 if( last == MICRO     ){    break;    }  }
 	}
 }
