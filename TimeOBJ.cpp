@@ -14,17 +14,102 @@
 
 #include "TimeOBJ.h"
 
-TimeOBJ::TimeOBJ(){}
-void TimeOBJ::zero(){ reset(); }
+TimeOBJ::TimeOBJ(){    reset();  }
 
-void TimeOBJ::add( unsigned long T, byte type ){
+uint16_t &TimeOBJ::operator[]( byte type ){
+	if( type > 6 ){  return( TimeTab[6]    );  }
+	else{            return( TimeTab[type] );  }
+}
+
+TimeOBJ &TimeOBJ::operator+(  const TimeOBJ &TimeToAdd  ){    static TimeOBJ objTemp = TimeOBJ();  for( byte i=0 ; i<7 ; i++ ){  objTemp.TimeTab[i] = TimeTab[i] + TimeToAdd[i];  }  return( objTemp );  }
+TimeOBJ &TimeOBJ::operator-(  const TimeOBJ &TimeToSub  ){    static TimeOBJ objTemp = TimeOBJ();  for( byte i=0 ; i<7 ; i++ ){  objTemp.TimeTab[i] = TimeTab[i] - TimeToSub[i];  }  return( objTemp );  }
+
+TimeOBJ &TimeOBJ::operator+(  uint32_t val  ){
+	timeToSplit = val;    typeToSplit = MILLI;    split();
+	static TimeOBJ objTemp = TimeOBJ();
+	for( byte i=0 ; i<7 ; i++ ){
+		objTemp.TimeTab[i] = TimeTab[i] + splitTab[i];
+	}
+	return( objTemp );  
+}
+TimeOBJ &TimeOBJ::operator-(  uint32_t val  ){
+	timeToSplit = val;    typeToSplit = MILLI;    split();
+	static TimeOBJ objTemp = TimeOBJ();
+	for( byte i=0 ; i<7 ; i++ ){
+		objTemp.TimeTab[i] = TimeTab[i] + splitTab[i];
+	}
+	return( objTemp );  
+}
+
+void TimeOBJ::operator=(  uint32_t val ){    reset();    add( val, MILLI  );      }
+void TimeOBJ::operator+=( uint32_t val ){                add( val, MILLI  );      }
+void TimeOBJ::operator-=( uint32_t val ){                sub( val, MILLI  );      }
+bool TimeOBJ::operator>=( uint32_t val ){                return( !(*this<val) );  }
+bool TimeOBJ::operator<=( uint32_t val ){                return( !(*this>val) );  }
+
+void TimeOBJ::operator=(  const TimeOBJ &TimeToSetTo ){      for( byte i=0 ; i<7 ; i++ ){    TimeTab[i]  = TimeToSetTo[i];            }                 }
+void TimeOBJ::operator+=( const TimeOBJ &TimeToAdd   ){      for( byte i=0 ; i<7 ; i++ ){    splitTab[i] = TimeToAdd.TimeTab[i];      }    add();       }
+void TimeOBJ::operator-=( const TimeOBJ &TimeToSub   ){      for( byte i=0 ; i<7 ; i++ ){    splitTab[i] = TimeToSub.TimeTab[i];      }    sub();       }
+bool TimeOBJ::operator>=( const TimeOBJ &TimeToCompare ){    return( !(*this<TimeToCompare) );  }
+bool TimeOBJ::operator<=( const TimeOBJ &TimeToCompare ){    return( !(*this>TimeToCompare) );  }
+
+
+bool TimeOBJ::operator>(  uint32_t val ){
+	timeToSplit = val;
+	typeToSplit = MILLI;
+	split();
+	byte A=0;
+	byte B=0;
+	for( byte i=0 ; i<7 ; i++ ){
+		if( TimeTab[6-i] > splitTab[6-i] ){       A = i;  }
+		else if( TimeTab[6-i] < splitTab[6-i] ){  B = i;  }
+	}
+	if( A>B ){  return( true );  }
+	else{       return( false ); }
+}
+bool TimeOBJ::operator<(  uint32_t val ){
+	timeToSplit = val;
+	typeToSplit = MILLI;
+	split();
+	byte A=0;
+	byte B=0;
+	for( byte i=0 ; i<7 ; i++ ){
+		if( TimeTab[6-i] > splitTab[6-i] ){       A = i;  }
+		else if( TimeTab[6-i] < splitTab[6-i] ){  B = i;  }
+	}
+	if( A<B ){  return( true );  }
+	else{       return( false ); }
+}
+bool TimeOBJ::operator>(  const TimeOBJ &TimeToCompare ){
+	byte A=0;
+	byte B=0;
+	for( byte i=0 ; i<7 ; i++ ){
+		if( TimeTab[6-i] > TimeToCompare[6-i] ){        A = i;  }
+		else if( TimeTab[6-i] < TimeToCompare[6-i] ) {  B = i;  }
+	}
+	if( A>B ){  return( true );  }
+	else{       return( false ); }
+}
+bool TimeOBJ::operator<(  const TimeOBJ &TimeToCompare ){
+	byte A=0;
+	byte B=0;
+	for( byte i=0 ; i<7 ; i++ ){
+		if( TimeTab[6-i] > TimeToCompare[6-i] ){        A = i;  }
+		else if( TimeTab[6-i] < TimeToCompare[6-i] ) {  B = i;  }
+	}
+	if( A<B ){  return( true );  }
+	else{       return( false ); }
+}
+
+
+void TimeOBJ::add( uint32_t T, byte type ){
 	timeToSplit = T;
 	typeToSplit = type;
 	split();
 	add();
 }
 
-void TimeOBJ::sub( unsigned long T, byte type ){
+void TimeOBJ::sub( uint32_t T, byte type ){
 	timeToSplit = T;
 	typeToSplit = type;
 	split();
@@ -59,38 +144,17 @@ void TimeOBJ::split(){
 	}
 }
 
-bool TimeOBJ::compare( uint16_t Y, uint16_t D, uint16_t H, uint16_t M, uint16_t S, uint16_t MS, uint16_t US ){
-	splitTab[ YEAR    ] = Y;
-	splitTab[ DAY     ] = D;
-	splitTab[ HOUR    ] = H;
-	splitTab[ MINUTE  ] = M;
-	splitTab[ SECONDE ] = S;
-	splitTab[ MILLI   ] = MS;
-	splitTab[ MICRO   ] = US;
-	return( compare() );
-}
-bool TimeOBJ::compare( uint32_t T, byte type ){
-    typeToSplit = type;
-	timeToSplit = T;
-	split();
-	return( compare() );
-}
-bool TimeOBJ::compare(){
-    for( byte i=0 ; i<7 ; i++ ){
-		if( splitTab[i] > TimeTab[i] ){  return( true );  }
-	}
-	return( false );
-}
 void TimeOBJ::print(){
-	Serial.print( "TimeTab  : " );
+	//Serial.print( "TimeTab  : " );
 	Serial.print( TimeTab[YEAR] );      Serial.print( "y " );
 	Serial.print( TimeTab[DAY] );       Serial.print( "d " );
 	Serial.print( TimeTab[HOUR] );      Serial.print( "h " );
 	Serial.print( TimeTab[MINUTE] );    Serial.print( "m " );
 	Serial.print( TimeTab[SECONDE] );   Serial.print( "s " );
-	Serial.print( TimeTab[MILLI] );     Serial.print( "m " );
-	Serial.print( TimeTab[MICRO] );     Serial.print( "u " );
+	Serial.print( TimeTab[MILLI] );     Serial.print( "ms " );
+	Serial.print( TimeTab[MICRO] );     Serial.print( "us " );
 	Serial.println();
+	/*
 	Serial.print( "splitTab : " );
 	Serial.print( splitTab[YEAR] );     Serial.print( "y " );
 	Serial.print( splitTab[DAY] );      Serial.print( "d " );
@@ -100,6 +164,7 @@ void TimeOBJ::print(){
 	Serial.print( splitTab[MILLI] );    Serial.print( "m " );
 	Serial.print( splitTab[MICRO] );    Serial.print( "u " );
 	Serial.println();
+	*/
 }
 
 
