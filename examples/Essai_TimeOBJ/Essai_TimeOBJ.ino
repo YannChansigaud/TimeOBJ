@@ -58,6 +58,12 @@ void setup() {
                              objTime.get( &years, &days, &hours, &minutes, &secondes, &millisecondes, &microsecondes );    printVAR();
   objTime = 0;
   Serial.println( "Exemple d'utilisation des opérateurs de comparaison :" );
+  Serial.println( "objTime30s = 30000 ?" );
+  if( objTime30s == 30000 ){  Serial.println( "vrai" );    }
+  else{                       Serial.println( "faux" );    }
+  Serial.println( "objTime2H24M != objTime30s ?" );
+  if( objTime2H24M != objTime30s ){  Serial.println( "vrai" );    }
+  else{                              Serial.println( "faux" );    }
   Serial.println( "objTime=millis() puis objTime > objTime5s ? " );
 }
 
