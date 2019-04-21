@@ -30,42 +30,46 @@ class TimeOBJ{
     TimeOBJ &operator-(  uint32_t val  );                   // -
     void operator+=( uint32_t val );                        // +=
     void operator-=( uint32_t val );                        // -=
-    // ==================================================== //       Surcharge d'opérateur en d'objet
+	// ==================================================== //       Surcharge d'opérateur en d'objet
     void operator=(  const TimeOBJ &TimeToSetTo    );       // =
     TimeOBJ &operator+(  const TimeOBJ &TimeToAdd  );       // +
     TimeOBJ &operator-(  const TimeOBJ &TimeToSub  );       // -
     void operator+=( const TimeOBJ &TimeToAdd      );       // +=
     void operator-=( const TimeOBJ &TimeToSub      );       // -=
-    // ==================================================== // ============================================= // Opérateur comparatif
+	// ==================================================== // ============================================= // Opérateur comparatif
     // ==================================================== //       Comparatif en valeur
+    bool operator==( uint32_t val );                        // ==
+    bool operator!=( uint32_t val );                        // !=
     bool operator>=( uint32_t val );                        // >=
     bool operator<=( uint32_t val );                        // <=
     bool operator>(  uint32_t val );                        // >
     bool operator<(  uint32_t val );                        // <
     // ==================================================== //       Comparateur d'objet
+    bool operator==( const TimeOBJ &TimeToCompare );        // ==
+    bool operator!=( const TimeOBJ &TimeToCompare );        // ==
     bool operator>=( const TimeOBJ &TimeToCompare );        // >=
     bool operator<=( const TimeOBJ &TimeToCompare );        // <=
     bool operator>(  const TimeOBJ &TimeToCompare );        // >
     bool operator<(  const TimeOBJ &TimeToCompare );        // <
     
     void add( uint32_t T, byte type );
-    void sub( uint32_t T, byte type );
+	void sub( uint32_t T, byte type );
     void get( uint16_t *Y, uint16_t *D, uint16_t *H, uint16_t *M, uint16_t *S, uint16_t *MS, uint16_t *US );
     void print();
 	
   private :
     uint16_t   TimeTab[7] = {     0,   0,  0,  0,  0,    0,    0 };
     uint16_t  splitTab[7] = {     0,   0,  0,  0,  0,    0,    0 };
-    uint16_t   maxiTab[8] = { 65535, 365, 24, 60, 60, 1000, 1000, 1 };
+	uint16_t   maxiTab[8] = { 65535, 365, 24, 60, 60, 1000, 1000, 1 };
     void div_eucli( byte type );
     void div_calculator( byte first, byte last );
-    uint32_t diviseur    = 0;
+	uint32_t diviseur    = 0;
     uint32_t timeToSplit = 0;
-    byte typeToSplit = 0;
-    void split();
-    void add();
-    void sub();
-    void reset();
+	byte typeToSplit = 0;
+	void split();
+	void add();
+	void sub();
+	void reset();
 	
 };
 
