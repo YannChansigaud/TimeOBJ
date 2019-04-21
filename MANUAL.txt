@@ -1,0 +1,131 @@
+Available keywords :
+YEAR / DAY / HOUR / MINUTE / SECONDE / MILLI / MICRO
+
+=== overloaded operator
+  [] direct access to YEAR, DAY, HOUR....
+  === mathematique operator
+  =
+  +
+  -
+  +=
+  -=
+  comparatif operator
+  ==
+  !=
+  <
+  >
+  <=
+  >=
+  undefined operator (operator without any sens)
+  *
+  /
+  *=
+  /=
+
+=== public method and function ===
+
+void add( unsigned long T, byte type );
+  method
+  abstract   Function adding value to time
+  discussion allow adding a value to time specifying the type
+  param    type [byte] : type of value to be added to time ( YEAR / DAY / HOUR / MINUTE / SECONDE / MILLI / MICRO )
+  param    T [unsigned long] : value to be added to time
+
+void sub( unsigned long T, byte type );
+  method
+  abstract   Function substrating value to time
+  discussion Allow to substract value to time specifying the type
+  param    type [byte] : type of value to be substract to time ( YEAR / DAY / HOUR / MINUTE / SECONDE / MILLI / MICRO )
+  aram    T [unsigned long] : value to be substract to time
+  
+void get( uint16_t *Y, uint16_t *D, uint16_t *H, uint16_t *M, uint16_t *S, uint16_t *MS, uint16_t *US );
+  method
+  abstract   Function to take back values
+  discussion give back stored value
+  param   *memory pointer of value to be get back
+
+void print();
+  method
+  abstract   Function to control
+  discussion print splitTab and timeTab to terminal serial
+  param    none
+
+=== private method and function ===
+  
+uint16_t   TimeTab[7] = {   0,   0,  0,  0,  0,  0,  0 };
+  variable
+  abstract   Time Array
+  discussion Stock value of time with format YEAR / DAY / HOUR / MINUTE / SECONDE / MILLI / MICRO 
+  
+uint16_t  splitTab[7] = {   0,   0,  0,  0,  0,  0,  0 };
+  variable
+  abstract   Time Array
+  discussion Stock value of time to be added or substracted to time
+
+uint16_t   maxiTab[8] = { 65535, 365, 24, 60, 60, 1000, 1000, 1 };
+  variable
+  abstract   Value Array
+  discussion Delaste the maximum value allowed
+
+bool compare();
+  method
+  abstract   Function comparator
+  discussion Compare splitTab to timeTab
+  param    none
+  return   true = splitTab is after timeTab
+  return   false = splitTab is before timeTab
+
+void div_eucli( byte type );
+  method
+  abstract   Euclidean division
+  discussion Calculation of quotient, divisor et remnant from the euclidean division of "timeToSplit" by "divisor" within the split() method regarding to type
+  discussion Quotient is store in splitTab[type]
+  discussion Remnant is updated in "timeToSplit" to be divide next step
+  discussion Divisor is update corresponding to the next division
+  param      type : delaste the division
+
+void div_calculator( byte first, byte last );
+  method
+  abstract   Divisor calculator
+  discussion Calculation of the value or the divisor
+  param    the divisor is multiplied from the first unit first [byte] to the last unit last [byte]
+
+unsigned long diviseur  = 0;
+  variable
+  abstract   Value
+  discussion divisor of "timeToSplit" within the euclidean division of div_eucli() calling by split()
+
+unsigned long timeToSplit = 0;
+  variable
+  abstract   Value
+  discussion value to be split
+
+byte typeToSplit = 0;
+  variable
+  abstract   Value
+  discussion type of value to be split
+
+void split();
+  method
+  abstract   Sequential Divisor 
+  discussion Manage the divisition of "timeToSplit" 
+
+void add();
+  method
+  abstract   Function adding time
+  discussion Add splitTab to timeTab.
+  discussion From MICRO to YEAR, add value by value, increasing the next if value>max
+  param    none
+
+void sub();
+  method
+  abstract   Function substrating time
+  discussion Substract splitTab to timeTab
+  discussion From MICRO to YEAR, sub value by value, decreasing the next one if result < 0
+  param    none
+
+void reset();
+  method
+  abstract   Function reset
+  discussion Resetting all tabs to zero
+  param    none
