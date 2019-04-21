@@ -41,18 +41,44 @@ TimeOBJ &TimeOBJ::operator-(  uint32_t val  ){
 	return( objTemp );  
 }
 
+bool TimeOBJ::operator==( uint32_t val ){
+	timeToSplit = val;
+	typeToSplit = MILLI;
+	split();
+	byte A=0;
+	for( byte i=0 ; i<7 ; i++ ){
+		if( TimeTab[i] != splitTab[i] ){       A++;  }
+	}
+	if( A>0 ){  return( false );  }
+	else{       return( true  );  }
+}
 void TimeOBJ::operator=(  uint32_t val ){    reset();    add( val, MILLI  );      }
 void TimeOBJ::operator+=( uint32_t val ){                add( val, MILLI  );      }
 void TimeOBJ::operator-=( uint32_t val ){                sub( val, MILLI  );      }
 bool TimeOBJ::operator>=( uint32_t val ){                return( !(*this<val) );  }
 bool TimeOBJ::operator<=( uint32_t val ){                return( !(*this>val) );  }
 
+bool TimeOBJ::operator==( const TimeOBJ &TimeToCompare ){
+	byte A=0;
+	for( byte i=0 ; i<7 ; i++ ){
+		if( TimeTab[i] != TimeToCompare[i] ){       A++;  }
+	}
+	if( A>0 ){  return( false );  }
+	else{       return( true  );  }
+}
 void TimeOBJ::operator=(  const TimeOBJ &TimeToSetTo ){      for( byte i=0 ; i<7 ; i++ ){    TimeTab[i]  = TimeToSetTo[i];            }                 }
 void TimeOBJ::operator+=( const TimeOBJ &TimeToAdd   ){      for( byte i=0 ; i<7 ; i++ ){    splitTab[i] = TimeToAdd.TimeTab[i];      }    add();       }
 void TimeOBJ::operator-=( const TimeOBJ &TimeToSub   ){      for( byte i=0 ; i<7 ; i++ ){    splitTab[i] = TimeToSub.TimeTab[i];      }    sub();       }
+
 bool TimeOBJ::operator>=( const TimeOBJ &TimeToCompare ){    return( !(*this<TimeToCompare) );  }
 bool TimeOBJ::operator<=( const TimeOBJ &TimeToCompare ){    return( !(*this>TimeToCompare) );  }
 
+bool TimeOBJ::operator!=( uint32_t val ){
+	return( !(*this==val) );
+}
+bool TimeOBJ::operator!=( const TimeOBJ &TimeToCompare ){
+	return( !(*this==TimeToCompare) );
+}
 
 bool TimeOBJ::operator>(  uint32_t val ){
 	timeToSplit = val;
