@@ -6,9 +6,13 @@ uint32_t go from 0 to 4 294 967 295
 So, this class has 4 main method :
 - add() allow you to add value with the unity of the value
 - sub() allow you to substract value with the unity of the value
-- zero() put all values stored to zéro
 - get() allow to get back values stored
-- compare() allow you to compare two time
+
+Overloaded operators are availables :
+- direct access operator : []
+- mathematical operator : =, +, - +=, -=, 
+- comparativ operator : ==, !=, <, >, <=, >=, 
+- only *, /, *= and /= are not define because has no sens
 
 
 All values are uint16_t and stored in this layout :
